@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: web
+  name: web
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: web
+    spec:
+      containers:
+      - args:
+        - bundle
+        - exec
+        - rails
+        - s
+        - -p
+        - "3000"
+        - -b
+        - 0.0.0.0
+        image: ugbechie/my-app:0.1.0
+        name: web
+        ports:
+        - containerPort: 3000
+        resources: {}
+        volumeMounts:
+        - mountPath: /myapp
+          name: web-claim0
+      restartPolicy: Always
+      volumes:
+      - name: web-claim0
+        persistentVolumeClaim:
+          claimName: web-claim0
+status: {}
